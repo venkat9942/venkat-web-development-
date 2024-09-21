@@ -1,14 +1,11 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>Task Manager</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #e6f7ff; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,24 +15,33 @@
 
         .container {
             background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
         }
 
         h1 {
             margin-top: 0;
+            font-size: 26px;
+            text-align: center;
         }
 
         input[type="text"] {
-            width: calc(100% - 90px);
-            padding: 10px;
+            width: calc(100% - 110px);
+            padding: 12px;
             margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
 
         button {
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
         }
 
         ul {
@@ -44,51 +50,59 @@
         }
 
         li {
-            background: #e4e4e4;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 4px;
+            background: #e9ecef;
+            margin: 6px 0;
+            padding: 12px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            background-color: #c8e6c9;
+        }
+
+        button.remove, button.edit, button.complete {
+            margin-left: 5px;
+            padding: 6px;
+            border-radius: 5px;
         }
 
         button.remove {
-            background: red;
+            background: #dc3545;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            float: right;
+        }
+
+        button.edit {
+            background: #ffc107;
+            color: white;
+        }
+
+        button.complete {
+            background: #28a745;
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>To-Do List</h1>
-        <input type="text" id="taskInput" placeholder="Add a new task...">
-        <button id="addTaskButton">Add Task</button>
+        <h1>Task Manager</h1>
+        <input type="text" id="taskInput" placeholder="Add a task...">
+        <button id="addTaskButton">Add</button>
         <ul id="taskList"></ul>
     </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const taskInput = document.getElementById('taskInput');
             const addTaskButton = document.getElementById('addTaskButton');
             const taskList = document.getElementById('taskList');
-
             addTaskButton.addEventListener('click', function () {
                 const taskText = taskInput.value.trim();
                 if (taskText) {
-                    const li = document.createElement('li');
-                    li.textContent = taskText;
-
-                    const removeButton = document.createElement('button');
-                    removeButton.textContent = 'Remove';
-                    removeButton.className = 'remove';
-                    removeButton.addEventListener('click', function () {
-                        taskList.removeChild(li);
-                    });
-
-                    li.appendChild(removeButton);
-                    taskList.appendChild(li);
-
+                    addTask(taskText);
                     taskInput.value = '';
                 }
             });
@@ -98,8 +112,38 @@
                     addTaskButton.click();
                 }
             });
+            function addTask(taskText) {
+                const li = document.createElement('li');
+                const taskLabel = document.createElement('span');
+                taskLabel.textContent = taskText;
+                const completeButton = document.createElement('button');
+                completeButton.textContent = 'Done';
+                completeButton.className = 'complete';
+                completeButton.addEventListener('click', function () {
+                    li.classList.toggle('completed');
+                });
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.className = 'edit';
+                editButton.addEventListener('click', function () {
+                    const newTaskText = prompt('Edit task:', taskLabel.textContent);
+                    if (newTaskText) {
+                        taskLabel.textContent = newTaskText;
+                    }
+                });
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Delete';
+                removeButton.className = 'remove';
+                removeButton.addEventListener('click', function () {
+                    taskList.removeChild(li);
+                });
+                li.appendChild(taskLabel);
+                li.appendChild(completeButton);
+                li.appendChild(editButton);
+                li.appendChild(removeButton);
+                taskList.appendChild(li);
+            }
         });
     </script>
 </body>
 </html>
-
